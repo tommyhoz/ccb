@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
     }, {
       headers: {
         // 🔑 記得人手入返你條 sk_live_... 密鑰
-        'Authorization': 'Bearer sk_test_aHn79BmmSNTtbPDk7hpYi7tj8ZxinN0_vn3riNUQlgA', 
+        'Authorization': 'Bearer sk_live_wnR3ycuyGLHs7cinkEhOFXUKXPyo_zABd_Z6NOa5i9w', 
         'Content-Type': 'application/json'
       }
     });
