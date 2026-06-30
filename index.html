@@ -21,29 +21,12 @@
     <script type="module">
         import Hyperbeam from "https://unpkg.com/@hyperbeam/web@latest/dist/index.js";
 
-        // ==========================================
-        // 🔑 在這裡填入你剛剛在 Hyperbeam 後台拿到的全新 Production Key
-        // ==========================================
-        const MY_API_KEY = "sk_live_wnR3ycuyGLHs7cinkEhOFXUKXPyo_zABd_Z6NOa5i9w"; 
-
         async function init() {
             try {
-                // 直接由前端發出開機請求，省卻 Vercel 後端，100% 成功率
-                const res = await fetch('https://engine.hyperbeam.com/v0/vm', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${MY_API_KEY}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        region: 'us-east',
-                        profile: { save: true },
-                        ublock: true,
-                        timeout: { offline: 7200 }
-                    })
-                });
-
+                // 轉打 Vercel 後端 API，徹底解決 CORS 報錯
+                const res = await fetch('/api/session');
                 const data = await res.json();
+                
                 if (!data.embed_url) throw new Error("未能獲取 embed_url");
 
                 document.getElementById('loading').style.display = 'none';
@@ -54,7 +37,7 @@
                 
             } catch (err) {
                 console.error(err);
-                document.getElementById('loading').innerText = "連線失敗，請檢查 API Key 是否填錯！";
+                document.getElementById('loading').innerText = "連線失敗，請檢查 Vercel 後端設定！";
             }
         }
 
