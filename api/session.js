@@ -1,7 +1,6 @@
 const axios = require('axios');
 
 module.exports = async (req, res) => {
-  // 強制寫入 CORS 允許 Header，徹底破解瀏覽器攔截
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -20,7 +19,8 @@ module.exports = async (req, res) => {
       timeout: { offline: 7200 }
     }, {
       headers: {
-        'Authorization': `Bearer ${process.env.HB_API_KEY}`, // 陣間鎖喺 Vercel 後台
+        // 🔑 暴力流：直接將你條 sk_live_... 填入下面，最無腦最穩陣
+        'Authorization': 'Bearer 條Key就咁貼喺度', 
         'Content-Type': 'application/json'
       }
     });
