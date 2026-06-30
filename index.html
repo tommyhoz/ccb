@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workspace</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body, html { width: 100%; height: 100%; overflow: hidden; background-color: #000; }
+        #container { width: 100vw; height: 100vh; }
+        #loading {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            color: #fff; font-family: sans-serif; font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">正在連線至歐美安全沙盒...</div>
+    <div id="container"></div>
+
+    <script type="module">
+        import Hyperbeam from "https://unpkg.com/@hyperbeam/web@latest/dist/index.js";
+
+        // ==========================================
+        // 🔑 在這裡填入你剛剛在 Hyperbeam 後台拿到的全新 Production Key
+        // ==========================================
+        const MY_API_KEY = "sk_live_wnR3ycuyGLHs7cinkEhOFXUKXPyo_zABd_Z6NOa5i9w"; 
+
+        async function init() {
+            try {
+                // 直接由前端發出開機請求，省卻 Vercel 後端，100% 成功率
+                const res = await fetch('https://engine.hyperbeam.com/v0/vm', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${MY_API_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        region: 'us-east',
+                        profile: { save: true },
+                        ublock: true,
+                        timeout: { offline: 7200 }
+                    })
+                });
+
+                const data = await res.json();
+                if (!data.embed_url) throw new Error("未能獲取 embed_url");
+
+                document.getElementById('loading').style.display = 'none';
+                const container = document.getElementById('container');
+
+                // 初始化虛擬瀏覽器
+                const hb = await Hyperbeam(container, data.embed_url);
+                
+            } catch (err) {
+                console.error(err);
+                document.getElementById('loading').innerText = "連線失敗，請檢查 API Key 是否填錯！";
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
